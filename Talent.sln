@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34018.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{5EC7FF92-5D05-4941-8192-DA14617F1D3B}"
 EndProject
@@ -72,35 +72,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AC4F182D-967D-4EEA-96DA-EB9C106F5649}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://dev.mvp.studio:8080/tfs/mvpstudiocollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = App\\Talent.App.WebApp\\Talent.App.WebApp.csproj
-		SccProjectTopLevelParentUniqueName1 = Talent.sln
-		SccProjectName1 = App/Talent.App.WebApp
-		SccLocalPath1 = App\\Talent.App.WebApp
-		SccProjectUniqueName2 = Talent.Api\\Talent.Api.csproj
-		SccProjectTopLevelParentUniqueName2 = Talent.sln
-		SccProjectName2 = Talent.Api
-		SccLocalPath2 = Talent.Api
-		SccProjectUniqueName3 = Talent.Common\\Talent.Common.csproj
-		SccProjectTopLevelParentUniqueName3 = Talent.sln
-		SccProjectName3 = Talent.Common
-		SccLocalPath3 = Talent.Common
-		SccProjectUniqueName4 = Talent.Services.Identity\\Talent.Services.Identity.csproj
-		SccProjectTopLevelParentUniqueName4 = Talent.sln
-		SccProjectName4 = Talent.Services.Identity
-		SccLocalPath4 = Talent.Services.Identity
-		SccProjectUniqueName5 = Talent.Services.Listing\\Talent.Services.Talent.csproj
-		SccProjectTopLevelParentUniqueName5 = Talent.sln
-		SccProjectName5 = Talent.Services.Listing
-		SccLocalPath5 = Talent.Services.Listing
-		SccProjectUniqueName6 = Talent.Services.Profile\\Talent.Services.Profile.csproj
-		SccProjectTopLevelParentUniqueName6 = Talent.sln
-		SccProjectName6 = Talent.Services.Profile
-		SccLocalPath6 = Talent.Services.Profile
 	EndGlobalSection
 EndGlobal

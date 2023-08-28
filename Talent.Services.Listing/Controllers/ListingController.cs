@@ -82,6 +82,7 @@ namespace Talent.Services.Listing.Controllers
             }
         }
 
+
         [HttpGet("GetJobByToEdit")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "employer, recruiter")]
         public IActionResult GetJobByToEdit(string Id)
