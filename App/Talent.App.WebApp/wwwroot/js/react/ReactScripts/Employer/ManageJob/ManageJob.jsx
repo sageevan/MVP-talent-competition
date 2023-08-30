@@ -104,27 +104,24 @@ export default class ManageJob extends React.Component {
 
     static renderJobsCards(myJobs) {
         console.log(myJobs)
-        myJobs?.map((e) =>
-            console.log(e.title))
         return (
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {myJobs.map((e) => {
-                        <h4>{e.title}</h4>;
+            <div className="job-card-section">
+            <div className="card-container">
+                <div className="job-cards">
+                    
+                {myJobs.map((myJob) => {
+                    return (
+                        <div className="job-card">
+                        <JobSummaryCard title={myJob.title} summary={myJob.summary}>
+
+                            </JobSummaryCard></div>
+                    )
                     })}
-                    {/*{myJobs?.map(myJob =>*/}
-                    {/*    <tr key={myJob.id}>*/}
-                    {/*        <td>{myJob.title}</td>*/}
-                    {/*    </tr>*/}
-                    {/*)}*/}
-                </tbody>
-            </table>
-        );
+                    
+                    </div>
+            </div>
+</div>
+        )
     }
 
     render() {
