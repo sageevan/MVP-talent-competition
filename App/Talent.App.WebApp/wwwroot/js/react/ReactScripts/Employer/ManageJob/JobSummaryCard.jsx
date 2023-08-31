@@ -17,10 +17,11 @@ export class JobSummaryCard extends React.Component {
  
     render() {
         return (
-            <div>
+            <div className="job-card-body">
+                <p className="key">{this.props.key}</p>
                     <h4 className="job-card-title">{this.props.title}</h4>
-                    <p className="job-card-summary">{this.props.summary}</p>
-</div>
+                <p className="job-card-summary">{this.props.summary}</p>
+                    </div>
         )
     }
 }

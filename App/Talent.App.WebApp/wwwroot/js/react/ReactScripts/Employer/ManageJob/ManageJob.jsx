@@ -6,6 +6,7 @@ import { LoggedInNavigation } from '../../Layout/LoggedInNavigation.jsx';
 import { JobSummaryCard } from './JobSummaryCard.jsx';
 import { BodyWrapper, loaderData } from '../../Layout/BodyWrapper.jsx';
 import { Pagination, Icon, Dropdown, Checkbox, Accordion, Form, Segment } from 'semantic-ui-react';
+import paginate from './Pagination.jsx';
 
 
 export default class ManageJob extends React.Component {
@@ -31,7 +32,10 @@ export default class ManageJob extends React.Component {
                 showUnexpired: true
             },
             totalPages: 1,
-            activeIndex: ""
+            activeIndex: "",
+            postsPerPage: 6,
+            currentPage : 1
+
         }
         this.loadData = this.loadData.bind(this);
         this.init = this.init.bind(this);
@@ -101,25 +105,44 @@ export default class ManageJob extends React.Component {
             })
         });
     }
+    paginate(pageNumber) {
+        this.setState({ currentPage: pageNumber });
+    }
 
-    static renderJobsCards(myJobs) {
+    previousPage(){
+        if (currentPage !== 1) {
+            this.setState(currentPage = currentPage - 1);
+        }
+    };
+
+    nextPage(){
+        if (currentPage !== Math.ceil(blogPosts.length / postsPerPage)) {
+            this.setState(currentPage = currentPage + 1);
+        }
+    };
+
+    static renderJobsCards(myJobs, currentpage, postsperpage) {
+        const indexOfLastPost = currentpage * postsperpage;
+        const indexOfFirstPost = indexOfLastPost - postsperpage;
+        const currentJobs = myJobs.slice(indexOfFirstPost, indexOfLastPost);
+        const totalJobs = myJobs.length;
         console.log(myJobs)
         return (
             <div className="job-card-section">
             <div className="card-container">
                 <div className="job-cards">
                     
-                {myJobs.map((myJob) => {
-                    return (
+                        {currentJobs.map((myJob,index) => {
+                            return (
                         <div className="job-card">
-                        <JobSummaryCard title={myJob.title} summary={myJob.summary}>
-
-                            </JobSummaryCard></div>
-                    )
-                    })}
+                            <JobSummaryCard key={myJob.id} title={myJob.title} summary={myJob.summary}>
+                                    </JobSummaryCard></div>
+                            )
+                        })}
+                        <Pagination totalPosts={totalJobs} postsPerPage={postsperpage} paginate={this.paginate} previousPage = { this.previousPage } nextPage = { this.nextPage } ></Pagination>
                     
                     </div>
-            </div>
+                </div>
 </div>
         )
     }
@@ -128,7 +151,7 @@ export default class ManageJob extends React.Component {
         return (
             <BodyWrapper reload={this.init} loaderData={this.state.loaderData}>
                 <div className="ui container">
-                    {ManageJob.renderJobsCards(this.state.loadJobs)} 
+                    {ManageJob.renderJobsCards(this.state.loadJobs, this.state.currentPage, this.state.postsPerPage)} 
                 </div>
             </BodyWrapper>
         )
