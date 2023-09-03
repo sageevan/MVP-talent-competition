@@ -1,9 +1,8 @@
 ﻿/* Add some padding inside the card container */
 .job-card-container {
+    margin-top: 5%;
     max-width: 1300px;
     width: 100%;
-    margin: auto;
-
 }
 .job-card-section {
     width: 100%;
@@ -11,6 +10,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+.job-card-location {
+    font-weight:lighter;
+    color:darkgrey;
+}
+.filter {
+    width: 200px;
 }
 .job-cards {
     display: flex;
@@ -33,6 +39,7 @@
     transition: 0.3s;
     border:2px solid transparent;
 }
+
 
     /* On mouse-over, add a deeper shadow */
     .job-card:hover {
