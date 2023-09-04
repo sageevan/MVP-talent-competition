@@ -30,6 +30,16 @@ export class JobSummaryCard extends React.Component {
             }
         })
     }
+    expiryStatus(expiryDate) {
+        console.log("expirycalled")
+        console.log(expiryDate + moment().toISOString(new Date()))
+        if (expiryDate < moment().toISOString(new Date())) {
+            
+            return "Expired";
+        } else {
+            return null;
+        }
+    }
 
  
     render() {
@@ -39,9 +49,13 @@ export class JobSummaryCard extends React.Component {
                 <h3 className="job-card-title">{this.props.title}</h3>
                 <p className="job-card-location">{this.props.city},{this.props.country}</p>
                 <p className="job-card-summary">{this.props.summary}</p>
+                <label name="status">{this.props.status}</label>
+                
                 <button onClick={() => { this.selectJob(this.props.closeButton) }}>Close</button>
                 <button onClick={() => { this.editJob(this.props.closeButton) }}>Edit</button>
                 <button onClick={() => { this.copyJob(this.props.closeButton) }}>Copy</button>
+
+                <label name="expiry">{this.expiryStatus(this.props.expiry)}</label>
                 </div>
         )
     }

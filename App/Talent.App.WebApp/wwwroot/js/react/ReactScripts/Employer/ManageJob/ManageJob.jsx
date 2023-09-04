@@ -63,44 +63,44 @@ export default class ManageJob extends React.Component {
     };
 
     loadData(callback) {
-        var filter = {
-            
-        }
+
         var params = {
-            activePage: this.state.activePage,
-            sortbyDate: this.state.sortBy.date,
-            showActive: this.state.filter.showActive,
-            showClosed: this.state.filter.showClosed,
-            showDraft: true,
-            showExpired: this.state.filter.showExpired,
-            showUnexpired: this.state.filter.showUnexpired
-        }
-        console.log("params:" + this.state.activePage + this.state.sortBy.date + this.state.filter.showActive + this.state.filter.showClosed + this.state.filter.showExpired + this.state.filter.showUnexpired)
-        var cookies = Cookies.get('talentAuthToken');
-        $.ajax({
-            url: 'http://localhost:51689/listing/listing/getSortedEmployerJobs',
-            data:params,
-            headers: {
-                'Authorization': 'Bearer ' + cookies,
-                'Content-Type': 'application/json'
-            },
-            type: "GET",
-            contentType: "application/json",
-            dataType: "json",
-            success: function (res) {
-                let jobData = null;
-                if (res.myJobs) {
-                    jobData = res.myJobs
-                    console.log("job data:"+res)
-                }
-                this.setState({
-                    loadJobs: jobData
-                })
-            }.bind(this),
-            error: function (res) {
-                console.log(res.status)
+                activePage: this.state.activePage,
+                sortbyDate: this.state.sortBy.date,
+                showActive: this.state.filter.showActive,
+                showClosed: this.state.filter.showClosed,
+                showDraft: true,
+                showExpired: this.state.filter.showExpired,
+                showUnexpired: this.state.filter.showUnexpired
             }
-        })
+            console.log("params:" + this.state.activePage + this.state.sortBy.date + this.state.filter.showActive + this.state.filter.showClosed + this.state.filter.showExpired + this.state.filter.showUnexpired)
+            var cookies = Cookies.get('talentAuthToken');
+            $.ajax({
+                url: 'http://localhost:51689/listing/listing/getSortedEmployerJobs',
+                data: params,
+                headers: {
+                    'Authorization': 'Bearer ' + cookies,
+                    'Content-Type': 'application/json'
+                },
+                type: "GET",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (res) {
+                    let jobData = null;
+                    let count = 0;
+                    if (res.myJobs) {
+                        jobData = res.myJobs
+                        count = res.TotalCount
+                        console.log("job data:" + jobData + count)
+                    }
+                    this.setState({
+                        loadJobs: jobData
+                    })
+                }.bind(this),
+                error: function (res) {
+                    console.log(res.status)
+                }
+            })
         //   this.init()
     }
 
@@ -124,7 +124,7 @@ export default class ManageJob extends React.Component {
         this.setState({
             activeIndex: pageInfo.activeIndex,
             activePage: pageInfo.activePage
-        }, () => { console.log("sha") }
+        }, () => console.log("pagination called")
         )
     }
 
@@ -190,22 +190,27 @@ export default class ManageJob extends React.Component {
 
         const filters = [
             {
+                key:'AJ',
             name: 'Active Jobs',
             value: 'Active Jobs',
             },
             {
+                key: 'CJ',
             name:'Closed Jobs',
             value: 'Closed Jobs'
             },
             {
+                key: 'DJ',
              name: 'Draft Jobs',
              value: 'Draft Jobs'
             },
             {
+                key: 'EJ',
             name: 'Expired Jobs',
             value: 'Expired Jobs'
             },
             {
+                key: 'UJ',
             name: 'Unexpired Jobs',
             value: 'Unexpired Jobs'
             }
@@ -239,14 +244,15 @@ return (
                     console.log(myJob.id)
                     return (
                         <div className="job-card">
-                            <JobSummaryCard key={myJob.id} title={myJob.title} city={myJob.location.city} country={myJob.location.country} summary={myJob.summary} closeButton={myJob.id }>
+                            <JobSummaryCard key={myJob.id} title={myJob.title} status={myJob.status} expiry={myJob.expiryDate} city={myJob.location.city} country={myJob.location.country} summary={myJob.summary} closeButton={myJob.id}>
                             </JobSummaryCard></div>
                     )
                 })}
 
                 <Pagination
-                    defaultActivePage={1}
+                    DefaultActivePage={1}
                     totalPages={Math.ceil(totalJobs / 6)}
+                    //totalPages={5}
                     onPageChange={(e, pageInfo) => ctrl.paginate(pageInfo)}
                 />
 
