@@ -236,28 +236,26 @@ return (
             </select>
 
         </div>
-        <div className="jobs-title" id="jobs-title"></div>
-        <div className="job-card-container">
-            <div className="job-cards">
+             <div class = "ui stackable three cards">
 
                 {currentJobs.map((myJob) => {
                     console.log(myJob.id)
                     return (
-                        <div className="job-card">
-                            <JobSummaryCard key={myJob.id} title={myJob.title} status={myJob.status} expiry={myJob.expiryDate} city={myJob.location.city} country={myJob.location.country} summary={myJob.summary} closeButton={myJob.id}>
-                            </JobSummaryCard></div>
+                        
+                            <JobSummaryCard  title={myJob.title} status={myJob.status} expiry={myJob.expiryDate} city={myJob.location.city} country={myJob.location.country} summary={myJob.summary} closeButton={myJob.id}>
+                            </JobSummaryCard>
                     )
                 })}
-
-                <Pagination
+        </div>
+        <div className="job-pagination">
+        <Pagination 
                     DefaultActivePage={1}
                     totalPages={Math.ceil(totalJobs / 6)}
                     //totalPages={5}
                     onPageChange={(e, pageInfo) => ctrl.paginate(pageInfo)}
                 />
-
-            </div>
-        </div>
+ 
+ </div>
     </div>
 )
     }
