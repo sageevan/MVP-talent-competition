@@ -4,8 +4,9 @@ import Cookies from 'js-cookie';
 import LoggedInBanner from '../../Layout/Banner/LoggedInBanner.jsx';
 import { LoggedInNavigation } from '../../Layout/LoggedInNavigation.jsx';
 import { JobSummaryCard } from './JobSummaryCard.jsx';
+import { UpdateJobModal } from './UpdateJobModal.jsx';
 import { BodyWrapper, loaderData } from '../../Layout/BodyWrapper.jsx';
-import { Pagination, Icon, Dropdown, Checkbox, Accordion, Form, Segment } from 'semantic-ui-react';
+import { Pagination, Icon, Dropdown, Checkbox, Accordion, Form, Segment, Modal } from 'semantic-ui-react';
 //import paginate from './Pagination.jsx';
 
 
@@ -31,6 +32,10 @@ export default class ManageJob extends React.Component {
                 showExpired: true,
                 showUnexpired: true,
             },
+            editJob: {
+                isOpen: false,
+                record: []
+            },
             activeIndex: "",
             jobsTitle:""
             }
@@ -40,6 +45,7 @@ export default class ManageJob extends React.Component {
         this.paginate = this.paginate.bind(this);
         this.sortByDate = this.sortByDate.bind(this);
         this.filterJobs = this.filterJobs.bind(this);
+        this.updateJob = this.updateJob.bind(this);
         //your functions go here
     };
 
@@ -91,7 +97,7 @@ export default class ManageJob extends React.Component {
                     if (res.myJobs) {
                         jobData = res.myJobs
                         count = res.TotalCount
-                        console.log("job data:" + jobData + count)
+                        console.log("job data:" + jobData.jobDetails)
                     }
                     this.setState({
                         loadJobs: jobData
@@ -179,6 +185,17 @@ export default class ManageJob extends React.Component {
 
     }
 
+    updateJob(selectedjob) {
+        this.setState({
+            editJob: {
+                isOpen: true,
+                record: selectedjob
+            }
+        }, () => console.log("update job called" + selectedjob.jobDetails.jobType)
+        );
+        
+    }
+
     static renderJobsCards(myJobs, currentpage, ctrl) {
         console.log(currentpage);
         const indexOfLastPost = currentpage * 6;
@@ -239,14 +256,24 @@ return (
              <div class = "ui stackable three cards">
 
                 {currentJobs.map((myJob) => {
-                    console.log(myJob.id)
                     return (
-                        
-                            <JobSummaryCard  title={myJob.title} status={myJob.status} expiry={myJob.expiryDate} city={myJob.location.city} country={myJob.location.country} summary={myJob.summary} closeButton={myJob.id}>
-                            </JobSummaryCard>
+
+                        <JobSummaryCard id={myJob.id} title={myJob.title} status={myJob.status} expiry={myJob.expiryDate} city={myJob.location.city} country={myJob.location.country} summary={myJob.summary} jobDetails={myJob.jobDetails} onUpdateJob={(id) => { ctrl.updateJob(myJob) }}>
+                            
+                            
+                        </JobSummaryCard>
                     )
                 })}
+
+            {ctrl.state.editJob.isOpen && (
+                <UpdateJobModal myJob={ctrl.state.editJob.record}>
+                
+                </UpdateJobModal>
+            )
+            }
         </div>
+        
+
         <div className="job-pagination">
         <Pagination 
                     DefaultActivePage={1}

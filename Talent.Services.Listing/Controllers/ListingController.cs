@@ -64,8 +64,8 @@ namespace Talent.Services.Listing.Controllers
                 }
                 else
                 {
-                    string employerId = _jobService.GetJobByIDAsync(jobData.Id).Result.EmployerID;
-                    if (employerId == jobData.EmployerID)
+                    string jobId = _jobService.GetJobByIDAsync(jobData.Id).Result.Id;
+                    if (jobId == jobData.Id)
                     {
                         _jobService.UpdateJob(jobData);
                         jobData.Status = JobStatus.Active;
@@ -155,7 +155,7 @@ namespace Talent.Services.Listing.Controllers
             try
             {
                 employerId =employerId==null? _userAppContext.CurrentUserId:employerId;
-                var myJobs = (await _jobService.GetEmployerJobsAsync(employerId)).Select(x => new { x.Id, x.Title, x.Summary, x.JobDetails.Location, x.Status, noOfSuggestions=x.TalentSuggestions!=null && x.TalentSuggestions.Count!=0 ?x.TalentSuggestions.Count:0 });
+                var myJobs = (await _jobService.GetEmployerJobsAsync(employerId)).Select(x => new { x.Id, x.Title, x.Summary, x.JobDetails.Location,x.JobDetails, x.Status, noOfSuggestions=x.TalentSuggestions!=null && x.TalentSuggestions.Count!=0 ?x.TalentSuggestions.Count:0 });
                 return Json(new { Success = true, MyJobs = myJobs });
             }
             catch
@@ -171,7 +171,7 @@ namespace Talent.Services.Listing.Controllers
             try
             {
                 employerId = employerId == null ? _userAppContext.CurrentUserId : employerId;
-                var sortedJobs = (await _jobService.GetEmployerJobsAsync(employerId));
+                var sortedJobs = (await _jobService.GetEmployerJobsAsync(employerId)).Select(x => new { x.Id, x.Title,x.ExpiryDate,x.Description,x.CreatedOn, x.Summary, x.JobDetails.Location, x.JobDetails, x.Status});
 
                 if (!showActive)
                 {
@@ -196,20 +196,20 @@ namespace Talent.Services.Listing.Controllers
                 //TODO Draft not implemented yet
                 if (!showDraft)
                 {
-                    sortedJobs = sortedJobs.Where(x => x.Status !=JobStatus.Active);
+                    sortedJobs = sortedJobs.Where(x => x.Status != JobStatus.Active);
                 }
 
                 if (sortbyDate == "desc")
                 {
                     var returnJobs = sortedJobs.OrderByDescending(x => x.CreatedOn)
-                        .Select(x => new { x.Id, x.Title, x.Summary, x.JobDetails.Location, x.ExpiryDate, x.Status, noOfSuggestions = x.TalentSuggestions != null && x.TalentSuggestions.Count != 0 ? x.TalentSuggestions.Count : 0 });
+                        .Select(x => new { x.Id, x.Title, x.Summary, x.JobDetails.Location,x.JobDetails, x.ExpiryDate, x.Status });
                     return Json(new { Success = true, MyJobs = returnJobs, TotalCount = sortedJobs.Count() });
                 }
 
                 else
                 {
                     var returnJobs = sortedJobs.OrderBy(x => x.CreatedOn)
-                        .Select(x => new { x.Id, x.Title, x.Summary, x.JobDetails.Location, x.ExpiryDate, x.Status, noOfSuggestions = x.TalentSuggestions != null && x.TalentSuggestions.Count != 0 ? x.TalentSuggestions.Count : 0 });
+                        .Select(x => new { x.Id, x.Title, x.Summary, x.JobDetails.Location,x.JobDetails, x.ExpiryDate, x.Status });
                     return Json(new { Success = true, MyJobs = returnJobs, TotalCount = sortedJobs.Count() });
                 }                
             }
