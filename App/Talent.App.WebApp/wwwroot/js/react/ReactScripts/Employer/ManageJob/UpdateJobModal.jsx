@@ -52,8 +52,9 @@ export class UpdateJobModal extends React.Component {
     }
 
     componentDidMount() {
-         this.init();
+        this.init();
         this.loadData();
+
     };
 
     addUpdateJob() {
@@ -86,6 +87,7 @@ export class UpdateJobModal extends React.Component {
     loadData() {
 
         var param = this.props.myJob.id ? this.props.myJob.id : "";
+
         if (param != "") {
             var link = 'http://localhost:51689/listing/listing/GetJobByToEdit?id=' + param;
             var cookies = Cookies.get('talentAuthToken');
@@ -115,6 +117,13 @@ export class UpdateJobModal extends React.Component {
         }
     }
 
+    showModal() {
+        this.setState({
+            jobData: this.props.myJob
+
+        }, () => console.log("Recceived job for editting" + this.state.jobData.jobDetails.jobType)
+        );
+    }
     updateStateData(event) {
         const data = Object.assign({}, this.state.jobData)
         data[event.target.name] = event.target.value

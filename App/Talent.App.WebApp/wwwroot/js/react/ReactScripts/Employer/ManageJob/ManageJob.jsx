@@ -152,7 +152,7 @@ export default class ManageJob extends React.Component {
     }
     filterJobs(e, data) {
         console.log("filter value " + data.value);
-        this.setState({ jobsTitle: data.value })
+        this.setState({ jobsTitle: data.value, activePage :1 })
         switch (data.value) {
             case "Active Jobs":
                 this.setState({
@@ -281,8 +281,8 @@ return (
         
 
         <div className="job-pagination">
-        <Pagination 
-                    DefaultActivePage={1}
+            <Pagination
+                defaultActivePage={currentpage}
                     totalPages={Math.ceil(totalJobs / 6)}
                     //totalPages={5}
                     onPageChange={(e, pageInfo) => ctrl.paginate(pageInfo)}
