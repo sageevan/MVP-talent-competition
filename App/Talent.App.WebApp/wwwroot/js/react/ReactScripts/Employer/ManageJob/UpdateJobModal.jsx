@@ -52,15 +52,13 @@ export class UpdateJobModal extends React.Component {
     }
 
     componentDidMount() {
-        this.showModal();
-        this.init();
+         this.init();
+        this.loadData();
     };
 
     addUpdateJob() {
         var jobData = this.state.jobData
         console.log("data to save:" + jobData.summary);
-        //jobData.jobDetails.startDate = jobData.jobDetails.startDate.toDate();
-        //console.log("date:", jobData.jobDetails.startDate);
         var cookies = Cookies.get('talentAuthToken');
         $.ajax({
             url: 'http://localhost:51689/listing/listing/createUpdateJob',
@@ -81,38 +79,63 @@ export class UpdateJobModal extends React.Component {
                     TalentUtil.notification.show(res.message, "error", null, null)
                 }
 
-            }.bind(this)
+            }
         })
     }
 
-    showModal() {
-        this.setState({
-            jobData: this.props.myJob
+    loadData() {
 
-        }, () => console.log("Recceived job for editting" + this.state.jobData.jobDetails.jobType)
-        );
+        var param = this.props.myJob.id ? this.props.myJob.id : "";
+        if (param != "") {
+            var link = 'http://localhost:51689/listing/listing/GetJobByToEdit?id=' + param;
+            var cookies = Cookies.get('talentAuthToken');
+            $.ajax({
+                url: link,
+                headers: {
+                    'Authorization': 'Bearer ' + cookies,
+                    'Content-Type': 'application/json'
+                },
+                type: "GET",
+                contentType: "application/json",
+                dataType: "json",
+                success: function (res) {
+                    if (res.success == true) {
+                        res.jobData.jobDetails.startDate = moment(res.jobData.jobDetails.startDate);
+                        res.jobData.jobDetails.endDate = res.jobData.jobDetails.endDate ? moment(res.jobData.jobDetails.endDate) : null;
+                        res.jobData.expiryDate = res.jobData.expiryDate
+                            ? moment(res.jobData.expiryDate) > moment()
+                                ? moment(res.jobData.expiryDate) : moment().add(14, 'days') : null;
+                        this.setState({ jobData: res.jobData })
+                    } else {
+                        TalentUtil.notification.show(res.message, "error", null, null)
+                        window.location = "/ManageJobs";
+                    }
+                }.bind(this)
+            })
+        }
     }
+
     updateStateData(event) {
         const data = Object.assign({}, this.state.jobData)
         data[event.target.name] = event.target.value
         this.setState({
             jobData: data
         })
-        console.log(data);
+    }
+
+    handleClose(){
+        window.location = "/ManageJobs";
     }
 
     render() {
-        
-        // this.showModal();
         return (
             <Modal class="update-job-modal"
                 open
-                //    onClose={true}
+                onClose={this.handleClose}
                 closeOnDimmerClick={false}
-                //     closeOnEscape={true}
+                closeOnEscape={true}
                 closeIcon
 
-                header={"Title"}
                 content={(
                     <Modal.Content>
                         <section className="page-body">
@@ -120,7 +143,7 @@ export class UpdateJobModal extends React.Component {
                                 <div className="ui grid">
                                     <div className="row">
                                         <div className="sixteen wide center aligned padded column">
-                                            <h1>Create Job</h1>
+                                            <h1>Update Job</h1>
                                         </div>
                                     </div>
 
@@ -162,7 +185,10 @@ export class UpdateJobModal extends React.Component {
 
                                                             <br />
                                                     
-                                                            
+                                                            <JobApplicant
+                                                                applicantDetails={this.state.jobData.applicantDetails}
+                                                                updateStateData={this.updateStateData}
+                                                            />
 
                                                             <br />
                                                         </div>
@@ -188,89 +214,7 @@ export class UpdateJobModal extends React.Component {
                     </Modal.Content>
                 )}
             />
-            //<div class="modal">
-            //    <div class="header">Header</div>
-            //    <div class="content">
-            //        <p>Sha</p>
-            //        <p>Sha</p>
-            //        <p>Sha</p>
-            //    </div>
-            //    </div>
-            //</Modal>
 
-
-
-            //<BodyWrapper reload={this.init} loaderData={this.state.loaderData}>
-            //    <section className="page-body">
-            //        <div className="ui container">
-            //            <div className="ui grid">
-            //                <div className="row">
-            //                    <div className="sixteen wide center aligned padded column">
-            //                        <h1>Create Job</h1>
-            //                    </div>
-            //                </div>
-
-            //                <div className="row">
-            //                    <div className="sixteen wide column">
-            //                        <div className="ui form">
-            //                            <div className="ui grid">
-            //                                <div className="row">
-            //                                    <div className="twelve wide column">
-            //                                        <label>* are required fields. Please enter all required fields.</label>
-            //                                        <h5>
-            //                                            *Title:
-            //                                        </h5>
-            //                                        <ChildSingleInput
-            //                                            inputType="text"
-            //                                            name="title"
-            //                                            value={this.state.jobData.title}
-            //                                            controlFunc={this.updateStateData}
-            //                                            maxLength={80}
-            //                                            placeholder="Enter a title for your job"
-            //                                            errorMessage="Please enter a valid title"
-            //                                        />
-            //                                        <h5>
-            //                                            *Description:
-            //                                        </h5>
-            //                                        <JobDescription
-            //                                            description={this.state.jobData.description}
-            //                                            controlFunc={this.updateStateData}
-            //                                        />
-            //                                        <br />
-            //                                        <h5>
-            //                                            *Summary:
-            //                                        </h5>
-            //                                        <JobSummary
-            //                                            summary={this.state.jobData.summary}
-            //                                            updateStateData={this.updateStateData} />
-            //                                        <br />
-
-            //                                        <br />
-            //                                        <JobApplicant
-            //                                            applicantDetails={this.state.jobData.applicantDetails}
-            //                                            updateStateData={this.updateStateData}
-            //                                        />
-            //                                        <br />
-            //                                    </div>
-            //                                    <div className="four wide column">
-            //                                        <JobDetailsCard
-            //                                            expiryDate={this.state.jobData.expiryDate}
-            //                                            jobDetails={this.state.jobData.jobDetails}
-            //                                            updateStateData={this.updateStateData}
-            //                                            createClick={this.addUpdateJob}
-            //                                        />
-            //                                    </div>
-            //                                </div>
-            //                            </div>
-            //                        </div>
-            //                    </div>
-            //                </div>
-            //            </div>
-            //        </div>
-            //        <br />
-            //        <br />
-            //    </section>
-            //</BodyWrapper>
         )
     }
 }

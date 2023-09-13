@@ -74,8 +74,8 @@ export default class ManageJob extends React.Component {
                 activePage: this.state.activePage,
                 sortbyDate: this.state.sortBy.date,
                 showActive: this.state.filter.showActive,
-                showClosed: this.state.filter.showClosed,
-                showDraft: true,
+            showClosed: this.state.filter.showClosed,
+            showDraft: this.state.filter.showDraft,
                 showExpired: this.state.filter.showExpired,
                 showUnexpired: this.state.filter.showUnexpired
             }
@@ -156,25 +156,31 @@ export default class ManageJob extends React.Component {
         switch (data.value) {
             case "Active Jobs":
                 this.setState({
-                    filter: { showActive: true, showClosed: false, showExpired: true, showUnexpired: true }
+                    filter: { showActive: true, showClosed: false, showExpired: true, showUnexpired: true, showDraft: true }
                 }, () => this.loadData()
                 );
                 break;
             case "Closed Jobs":
                 this.setState({
-                    filter: { showActive: false, showClosed: true, showExpired: true, showUnexpired: true }
+                    filter: { showActive: false, showClosed: true, showExpired: true, showUnexpired: true, showDraft: true }
                 }, () => this.loadData()
                 );
                 break;
             case "Expired Jobs":
                 this.setState({
-                    filter: { showActive: true, showClosed: true, showExpired: true, showUnexpired: false }
+                    filter: { showActive: true, showClosed: true, showExpired: true, showUnexpired: false, showDraft: true }
+                }, () => this.loadData()
+                );
+                break;
+            case "Draft Jobs":
+                this.setState({
+                    filter: { showActive: true, showClosed: true, showExpired: true, showUnexpired: true, showDraft:false }
                 }, () => this.loadData()
                 );
                 break;
             case "Unexpired Jobs":
                 this.setState({
-                    filter: { showActive: true, showClosed: true, showExpired: false, showUnexpired: true }
+                    filter: { showActive: true, showClosed: true, showExpired: false, showUnexpired: true, showDraft: true }
                 }, () => this.loadData()
                 );
                 break;

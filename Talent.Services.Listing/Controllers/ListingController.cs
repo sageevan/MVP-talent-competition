@@ -13,6 +13,8 @@ using Talent.Common.Contracts;
 using MongoDB.Driver;
 using Talent.Services.Talent.Domain.Contracts;
 using Talent.Services.Profile.Domain.Contracts;
+using Microsoft.EntityFrameworkCore.Query.Expressions;
+using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators.Internal;
 
 namespace Talent.Services.Listing.Controllers
 {
@@ -67,6 +69,7 @@ namespace Talent.Services.Listing.Controllers
                     string jobId = _jobService.GetJobByIDAsync(jobData.Id).Result.Id;
                     if (jobId == jobData.Id)
                     {
+                        jobData.EmployerID = _userAppContext.CurrentUserId;
                         _jobService.UpdateJob(jobData);
                         jobData.Status = JobStatus.Active;
                         message = "Job updated successfully";
@@ -171,7 +174,7 @@ namespace Talent.Services.Listing.Controllers
             try
             {
                 employerId = employerId == null ? _userAppContext.CurrentUserId : employerId;
-                var sortedJobs = (await _jobService.GetEmployerJobsAsync(employerId)).Select(x => new { x.Id, x.Title,x.ExpiryDate,x.Description,x.CreatedOn, x.Summary, x.JobDetails.Location, x.JobDetails, x.Status});
+                var sortedJobs = (await _jobService.GetEmployerJobsAsync(employerId)).Select(x => new { x.Id, x.Title,x.ExpiryDate,x.Description,x.CreatedOn, x.Summary, x.JobDetails.Location, x.JobDetails, x.Status, x.ApplicantDetails});
 
                 if (!showActive)
                 {
@@ -196,20 +199,21 @@ namespace Talent.Services.Listing.Controllers
                 //TODO Draft not implemented yet
                 if (!showDraft)
                 {
-                    sortedJobs = sortedJobs.Where(x => x.Status != JobStatus.Active);
+                     sortedJobs = sortedJobs.Where(x => x.GetType().GetProperties().Any(value => value == null));
+
                 }
 
                 if (sortbyDate == "desc")
                 {
                     var returnJobs = sortedJobs.OrderByDescending(x => x.CreatedOn)
-                        .Select(x => new { x.Id, x.Title, x.Summary, x.JobDetails.Location,x.JobDetails, x.ExpiryDate, x.Status });
+                        .Select(x => new { x.Id, x.Title, x.Summary,x.Description, x.JobDetails.Location,x.ApplicantDetails,x.JobDetails, x.ExpiryDate, x.Status });
                     return Json(new { Success = true, MyJobs = returnJobs, TotalCount = sortedJobs.Count() });
                 }
 
                 else
                 {
                     var returnJobs = sortedJobs.OrderBy(x => x.CreatedOn)
-                        .Select(x => new { x.Id, x.Title, x.Summary, x.JobDetails.Location,x.JobDetails, x.ExpiryDate, x.Status });
+                        .Select(x => new { x.Id, x.Title, x.Summary,x.Description, x.JobDetails.Location,x.ApplicantDetails,x.JobDetails, x.ExpiryDate, x.Status });
                     return Json(new { Success = true, MyJobs = returnJobs, TotalCount = sortedJobs.Count() });
                 }                
             }

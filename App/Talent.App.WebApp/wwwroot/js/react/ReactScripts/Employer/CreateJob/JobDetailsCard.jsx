@@ -74,7 +74,8 @@ export class JobDetailsCard extends React.Component {
         const { jobType } = jobDetails;
         console.log(jobDetails +jobType)
         //expires in 14 days by default
-        const expiryDate = this.props.expiryDate instanceof moment ? this.props.expiryDate : moment().add(14, 'days');
+        const expiryDate = this.props.expiryDate instanceof moment ? this.props.expiryDate : moment(jobDetails.startDate).add(14, 'days');
+
         return (
             <div className="ui segment">
                 <div className="content">
@@ -136,29 +137,29 @@ export class JobDetailsCard extends React.Component {
                             </div>
                             <div className="event">
                                 <div className="content">
-                                    {/*<div className="summary">*/}
-                                    {/*    *Start Date:*/}
-                                    {/*    <br />*/}
-                                    {/*    <DatePicker*/}
-                                    {/*        //value={jobDetails.startDate }*/}
-                                    {/*        selected={jobDetails.startDate}*/}
-                                    {/*        onChange={(date) => this.handleChangeDate(date, "startDate")}*/}
-                                    {/*        minDate={moment()}*/}
-                                    {/*    />*/}
-                                    {/*</div>*/}
-                                    {/*<div className="summary">*/}
-                                    {/*    End Date:*/}
-                                    {/*    <br />*/}
-                                    {/*    <DatePicker*/}
-                                    {/*        selected={jobDetails.endDate}*/}
-                                    {/*        onChange={(date) => this.handleChangeDate(date, "endDate")}*/}
-                                    {/*        minDate={moment()}*/}
-                                    {/*    />*/}
-                                    {/*</div>*/}
+                                    <div className="summary">
+                                        *Start Date:
+                                        <br />
+                                        <DatePicker
+                                            selected={jobDetails.startDate}
+                                            onChange={(date) => this.handleChangeDate(date, "startDate")}
+                                            minDate={moment()}
+                                        />
+                                    </div>
+                                    <div className="summary">
+                                        End Date:
+                                        <br />
+                                        <DatePicker
+                                            selected={jobDetails.endDate}
+                                            onChange={(date) => this.handleChangeDate(date, "endDate")}
+                                            minDate={moment()}
+                                        />
+                                    </div>
                                     <div className="summary">
                                         *Expiry Date:
                                         <br />
                                         <DatePicker
+                                            format={"YYYY-MM-DD"}
                                             selected={expiryDate}
                                             onChange={(date) => this.handleChangeDate(date, "expiryDate")}
                                             minDate={moment()}
