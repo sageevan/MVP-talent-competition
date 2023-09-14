@@ -37,7 +37,8 @@ export default class ManageJob extends React.Component {
                 record: []
             },
             activeIndex: "",
-            jobsTitle:""
+            jobsTitle: "",
+            emptyData: false
             }
         this.loadData = this.loadData.bind(this);
         this.init = this.init.bind(this);
@@ -95,13 +96,19 @@ export default class ManageJob extends React.Component {
                     let jobData = null;
                     let count = 0;
                     if (res.myJobs) {
-                        jobData = res.myJobs
-                        count = res.TotalCount
-                        console.log("job data:" + jobData.jobDetails)
+                        if (res.myJobs.count == 0) {
+                            this.setState({ emptyData: true })
+                        } else {
+                            jobData = res.myJobs
+                            count = res.TotalCount
+                            this.setState({ emptyData: false })
+                            console.log("job data:" + jobData.jobDetails)
+                            this.setState({
+                                loadJobs: jobData
+                            })
+                        }
                     }
-                    this.setState({
-                        loadJobs: jobData
-                    })
+
                 }.bind(this),
                 error: function (res) {
                     console.log(res.status)
@@ -241,7 +248,7 @@ export default class ManageJob extends React.Component {
 return (
     <div className="job-card-section">
         <div>
-
+            <h3>List of Jobs</h3>
             <Icon name='filter' />Filter :&nbsp;
             <Dropdown className="filter" text={ctrl.state.jobsTitle} placeholder="Choose Filter" icon="angle down">
                 <Dropdown.Menu>
@@ -259,6 +266,12 @@ return (
             </select>
 
         </div>
+        {ctrl.state.emptyData && (
+            <div>No jobs Found</div>
+        )
+        }
+
+
              <div class = "ui stackable three cards">
 
                 {currentJobs.map((myJob) => {
